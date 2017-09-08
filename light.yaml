@@ -1,0 +1,180 @@
+
+  - platform: mqtt
+    name: "Saskia's Strip Light OTHER"
+    state_topic: "stat/saskia_ws2812/SCHEME"
+    command_topic: "cmnd/saskia_ws2812/SCHEME"
+#    state_value_template: "{{ value_json.POWER }}"
+    qos: 1
+    payload_on: "8"
+    payload_off: ""
+    optimistic: false
+
+
+ 
+  - platform: mqtt
+    name: "Saskia's Strip Light"
+    state_topic: "stat/saskia_ws2812/POWER"
+    command_topic: "cmnd/saskia_ws2812/POWER"
+    brightness_state_topic: "stat/saskia_ws2812/Scheme"
+    brightness_command_topic: "cmnd/saskia_ws2812/Scheme"
+    rgb_state_topic: "stat/saskia_ws2812/Color"
+    rgb_command_topic: "cmnd/saskia_ws2812/Color"
+#    state_value_template: "{{ value_json.POWER }}"
+    brightness_value_template: "{{ value_json.Dimmer }}"
+    rgb_value_template: "{{ value_json.Color | join(',') }}"
+    rgb_command_mode: hex
+    brightness_scale: 9
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+
+  - platform: mqtt
+    name: "Mini Light"
+    state_topic: "stat/mini/POWER"
+    command_topic: "cmnd/mini/POWER"
+    brightness_state_topic: "stat//mini/Dimmer"
+    brightness_command_topic: "cmnd/mini/Dimmer"
+    rgb_state_topic: "stat/mini/Color"
+    rgb_command_topic: "cmnd/mini/Color"
+#    state_value_template: "{{ value_json.POWER }}"
+    brightness_value_template: "{{ value_json.Dimmer }}"
+    rgb_value_template: "{{ value_json.Color | join(',') }}"
+    rgb_command_mode: hex
+    brightness_scale: 100
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+
+
+  - platform: mqtt
+    name: "Living Room Main Light"
+    state_topic: "stat/living1/POWER1"
+    command_topic: "cmnd/living1/POWER1"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Living Room Side Lights"
+    state_topic: "stat/living1/POWER2"
+    command_topic: "cmnd/living1/POWER2"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Living Room Other Light"
+    state_topic: "stat/living2/POWER"
+    command_topic: "cmnd/living2/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "sonoff1"
+    state_topic: "stat/sonoff/POWER1"
+    command_topic: "cmnd/sonoff/POWER1"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "sonoff2"
+    state_topic: "stat/sonoff/POWER2"
+    command_topic: "cmnd/sonoff/POWER2"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "sonoff3"
+    state_topic: "stat/sonoff/POWER3"
+    command_topic: "cmnd/sonoff/POWER3"
+    brightness_state_topic: "stat//sonoff/Dimmer"
+    brightness_command_topic: "cmnd/sonoff/Dimmer"
+    rgb_state_topic: "stat/sonoff/Color"
+    rgb_command_topic: "cmnd/sonoff/Color"
+#    state_value_template: "{{ value_json.POWER }}"
+    brightness_value_template: "{{ value_json.Dimmer }}"
+    rgb_value_template: "{{ value_json.Color | join(',') }}"
+    rgb_command_mode: hex
+    brightness_scale: 10
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+
+  - platform: mqtt
+    name: "blank"
+    state_topic: "stat/blank/POWER"
+    command_topic: "cmnd/blank/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Presidential Suite"
+    state_topic: "stat/presidential/POWER"
+    command_topic: "cmnd/presidential/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Top Floor Toilet"
+    state_topic: "stat/toilet_up/POWER"
+    command_topic: "cmnd/toilet_up/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Bathroom Light"
+    state_topic: "stat/bathroom_d/POWER1"
+    command_topic: "cmnd/bathroom_d/POWER1"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Asher's Bedroom Light"
+    state_topic: "stat/asher1/POWER"
+    command_topic: "cmnd/asher1/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+  - platform: mqtt
+    name: "Saskia's Bedroom Light"
+    state_topic: "stat/saskia1/POWER"
+    command_topic: "cmnd/saskia1/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: false
+
+
+

@@ -1,0 +1,7 @@
+#LOGGER
+  default: error
+  logs:
+    homeassistant.components.rest_command: debug
+#    homeassistant.components.mqtt: debug
+#    homeassistant.components.camera: debug
+    homeassistant.components.automation: debug

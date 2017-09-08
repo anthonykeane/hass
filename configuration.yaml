@@ -1,0 +1,162 @@
+homeassistant:
+  name: Home
+  latitude: !secret LATITUDE
+  longitude: !secret LONGITUDE
+  elevation: 75
+  unit_system: metric
+  time_zone: Australia/Sydney
+  customize:
+#    switch.front_door_lock:
+#      hidden: true
+    switch.garage_door_lock:
+      hidden: true
+    automation.turn_off_front_door_after_60_second:
+      hidden: true
+    automation.alarm_garage_door_turn_off_after_1_second:
+      hidden: true
+    automation.alarm_open_front_door:
+      hidden: true
+    automation.alarm_open_garage_door:
+      hidden: true
+
+    switch.ac_upstairs:
+      icon: mdi:air-conditioner
+    light.saskias_strip_light:
+      icon: mdi:led-strip
+    alarm_control_panel.front_door_lock:
+       icon: mdi:home
+    alarm_control_panel.garage_door_lock:
+       icon: mdi:garage
+    automation.turn_off_ashers_light_after_5min:
+       icon: mdi:av-timer
+    automation.tv_off_at_720pm:
+       icon: mdi:av-timer
+    automation.turn_off_main_bathroom_light_after_10min:
+       icon: mdi:av-timer
+    automation.start_ha:
+       icon: mdi:power
+
+
+binary_sensor:
+  - platform: workday
+    country: AU
+    province: NSW
+    days_offset: 1
+
+recorder:
+  purge_days: 14
+
+rest_command:
+  ip_gae_request:
+    url: 'https://pak-hass.appspot.com/memcache/ip'
+    payload: '{"ip":"{{states.sensor.external_ip.state}}"}'
+    method: put
+
+
+
+notify:
+  platform: pushbullet
+  name: PAKpushbullet
+  api_key: !secret pushbullet_key
+
+emulated_hue:
+
+cover:
+  platform: mqtt
+  state_topic: "home-assistant/cover"
+  command_topic: "home-assistant/cover/set"
+  name: "Garden Blinds"
+  qos: 1
+  retain: true
+  payload_open: "UP"
+  payload_close: "DOWN"
+  payload_stop: "STOP"
+  state_open: "OPEN"
+  state_closed: "CLOSED"
+  optimistic: false
+
+input_boolean:
+  pakhome:
+    name: PAK Home
+    initial: on
+    icon: mdi:cellphone-iphone
+
+alarm_control_panel:
+  - platform: manual
+    name: "Front Door Lock"
+    pending_time: 2
+    code: "5"
+  - platform: manual
+    name: "Garage Door Lock"
+    pending_time: 2
+    code: "5"
+
+camera: !include camera.yaml
+
+logger: !include logger.yaml
+
+automation: !include automations.yaml
+
+switch: !include switch.yaml
+
+sensor: !include sensor.yaml
+
+light: !include light.yaml
+
+#device_tracker: !include device.yaml
+
+
+media_player:
+  - platform: samsungtv
+    host: 192.168.0.111
+  - platform: cast
+    host: 192.168.0.19
+
+
+http:
+  api_password: !include secret_password.yaml
+  ssl_certificate: /home/pak/.homeassistant/fullchain.pem 
+  ssl_key: /home/pak/.homeassistant/privkey.pem
+  trusted_networks:
+    - 127.0.0.1
+    - ::1
+    - 192.168.0.0/24
+  cors_allowed_origins:
+    - https://google.com
+  
+group: !include group.yaml
+
+discovery:
+
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+    sad:
+      primary-color: blue
+
+conversation:
+
+history:
+
+logbook:
+  exclude:
+    domains:
+      - group
+
+sun:
+
+mqtt:
+  keepalive: 60
+#  discovery: true
+#  discovery_prefix: homeassistant
+
+
+
+#  broker: 127.0.0.1
+#  port: 1883
+#  client_id: home-assistant-1
+#  username: pi
+#  password: raspberry
+
+  

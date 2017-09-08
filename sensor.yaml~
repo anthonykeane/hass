@@ -1,0 +1,39 @@
+  - platform: template
+    sensors:
+      sun_ele:
+        value_template: '{{ states.sun.sun.attributes.elevation }}'
+        unit_of_measurement: 'deg'
+
+
+  - platform: mqtt
+    state_topic: "home-assistant/temp"
+    name: "room temp"
+    unit_of_measurement: "C"
+
+  - platform: mqtt
+    state_topic: "tele/mini_pir/SENSOR"
+    name: "PIR Counter"
+    unit_of_measurement: "Times"
+    value_template: '{{ value_json.Counter1 }}'
+
+  - platform: snmp
+    host: 192.168.0.130
+    name: GarageDoor
+    baseoid: 1.3.6.1.4.1.38783.3.1.3.0
+
+  - platform: snmp
+    host: 192.168.0.130
+    name: FrontDoorLatch
+    baseoid: 1.3.6.1.4.1.38783.3.1.4.0
+
+  - platform: fastdotcom
+
+  - platform: systemmonitor
+    resources:
+      - type: processor_use
+
+  - platform: rest
+    resource: http://ip.jsontest.com
+    name: External IP
+    value_template: '{% if is_state('device_tracker.paulus', 'home') %}{{ value_json.ip }}'
+

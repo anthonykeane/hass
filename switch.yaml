@@ -1,0 +1,45 @@
+  - platform: mqtt
+    name: "AC Down Stairs"
+    state_topic: "stat/ac_down/POWER"
+    command_topic: "cmnd/ac_down/POWER"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: true
+
+  - platform: mqtt
+    name: "Bathroom Fan"
+    state_topic: "stat/bathroom_d/POWER2"
+    command_topic: "cmnd/bathroom_d/POWER2"
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+    qos: 1
+    retain: true
+
+
+
+
+
+
+  - platform: command_line
+    switches:
+      front_door_lock:
+        command_on: "/usr/bin/curl -X GET http://192.168.0.105/snmppak.php?device=4"
+#        command_off: "/usr/bin/curl -X GET http://192.168.0.105/snmppak.php?device=4"
+        friendly_name: Front Door Lock
+
+  - platform: command_line
+    switches:
+      garage_door_lock:
+        command_on: "/usr/bin/curl -X GET http://192.168.0.105/snmppak.php?device=3"
+ #       command_off: "/usr/bin/curl -X GET http://192.168.0.105/snmppak.php?device=3"
+        friendly_name: Garage Door Lock
+
+  - platform: command_line
+    switches:
+      reboot_internet:
+        command_on: "/usr/bin/curl -X GET http://192.168.0.105/snmppak129.php?device=14"
+#        command_off: "/usr/bin/curl -X GET http://192.168.0.105/snmppak129.php?device=14"
+        friendly_name: Reboot the Internet Modem

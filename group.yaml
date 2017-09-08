@@ -1,0 +1,143 @@
+  First Floor Lights:
+    - group.living_room_lights
+    - light.bathroom_light
+
+  Living Room Lights:
+    - light.living_room_main_light
+    - light.living_room_other_light
+    - light.living_room_side_lights
+
+  First Floor Switches:
+    - switch.ac_down_stairs
+    - switch.bathroom_fan
+
+  First Floor Media:
+    - media_player.samsung_tv_remote
+    - media_player.television
+    - media_player.living_room
+
+  Top Floor:
+    - group.ashers_room
+    - group.saskias_room
+    - light.top_floor_toilet
+    - light.presidential_suite
+    - switch.ac_upstairs
+
+  Outdoors:
+    - sun.sun
+
+  System:
+    - sensor.pir_counter
+    - sensor.room_temp
+    - sensor.temp_upstairs
+    - sensor.sun_ele
+    - sensor.room_temp
+    - sensor.frontdoorlatch
+    - sensor.garagedoor
+    - sensor.external_ip
+    - sensor.cpu_use
+    - sensor.fastcom_download
+
+  People:
+    - device_tracker.galaxy_s8
+    - device_tracker.mac16pak
+    - device_tracker.Yvonne_iPhone
+    - device_tracker.s8
+
+  Auto1:
+    - automation.start_ha
+
+  Auto2:
+    - automation.turn_off_main_bathroom_light_after_10min
+    - automation.turn_off_ashers_light_after_5min
+    - automation.tv_off_at_720pm
+
+  Locks:
+    - alarm_control_panel.front_door_lock
+    - alarm_control_panel.garage_door_lock
+
+  Asher's Room:
+    - light.ashers_bedroom_light
+
+  Saskia's Room:
+    - light.saskias_bedroom_light
+    - light.saskias_strip_light
+
+  default_view1:
+    view: yes
+    icon: mdi:home-variant
+    entities:
+      - group.first_floor_view
+      - group.top_floor_view
+      - group.auto1
+      - group.auto2
+      - group.outdoors
+      - group.system
+      - group.people
+      - light.blank
+      - light.sonoff
+      - light.sonoff2
+      - light.sonoff3
+
+  Ash_view:
+    name: AshRoom
+    view: yes
+    icon: mdi:angular
+    entities:
+      - group.ashers_room
+
+  Sas_view:
+    name: SasRoom
+    view: yes
+    icon: mdi:code-string
+    entities:
+      - group.saskias_room
+
+  First_Floor_view:
+    view: yes
+    icon: mdi:sofa
+    entities:
+      - group.first_floor_lights
+      - group.living_room_lights
+      - group.first_floor_media
+      - group.first_floor_switches
+      - cover.garden_blinds
+
+
+  Top_Floor_view:
+    view: yes
+    icon: mdi:hotel
+    entities:
+      - group.ashers_room
+      - group.saskias_room
+      - light.top_floor_toilet
+      - light.presidential_suite
+      - switch.ac_upstairs
+
+
+  Data:
+    name: Data
+    icon: mdi:information
+    view: yes
+    entities:
+      - group.system
+
+  Security:
+    name: Security
+    icon: mdi:security-home
+    view: yes
+    entities:
+      - camera.living_room_camera
+      - camera.front_door_camera
+      - camera.cam_2_rtsp
+      - camera.cam_1_rtsp
+
+  Scary:
+    name: Protected
+    icon: mdi:key-variant
+    view: yes
+    entities:
+      - group.locks
+      - switch.reboot_internet
+
+

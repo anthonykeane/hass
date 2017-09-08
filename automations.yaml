@@ -1,0 +1,347 @@
+  - alias: IPAddress1
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      - delay:
+          seconds: 10
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/IPAddress1"
+
+
+  - alias: 'Close blind at dusk'
+    trigger:
+      platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{ state.attributes.elevation }}'
+      below: 4
+    action:
+      service: cover.close_cover
+      entity_id: cover.garden_blinds
+
+
+
+  - alias: Start HA
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      - delay:
+          seconds: 10
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER1"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER2"
+      - delay:
+          seconds: 50
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER1"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/sonoffs/POWER2"
+
+
+  - alias: 'Anthony Away'
+    condition:
+      condition: state
+      entity_id: input_boolean.pakhome
+      state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.galaxy_s8
+        to: 'not_home' 
+        for:
+          minutes: 10
+      - platform: state
+        entity_id: device_tracker.s8
+        to: 'not_home' 
+      - platform: state
+        entity_id: device_tracker.mac16pak
+        to: 'not_home'       
+    action:
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.pakhome
+      - service: notify.PAKpushbullet
+        data:
+          message: 'NOT home.'
+
+
+  - alias: 'Anthony Home'
+    condition:
+      condition: state
+      entity_id: input_boolean.pakhome
+      state: 'off'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.galaxy_s8
+        to: 'home' 
+      - platform: state
+        entity_id: device_tracker.s8
+        to: 'home' 
+      - platform: state
+        entity_id: device_tracker.mac16pak
+        to: 'home'       
+    action:
+      - service: homeassistant.turn_on
+        entity_id: input_boolean.pakhome
+      - service: notify.PAKpushbullet
+        data:
+          message: 'home.'
+
+
+  - alias: Turn off Toilet light after 5min
+    trigger:
+      platform: state
+      entity_id: light.top_floor_toilet
+      to: "on"
+      for:
+        minutes: 5
+    action:
+      - service: light.turn_off
+        entity_id: light.top_floor_toilet
+
+
+  - alias: Turn off Asher's light after 5min
+    trigger:
+      platform: state
+      entity_id: light.ashers_bedroom_light
+      to: "on"
+      for:
+        minutes: 5
+    action:
+      - service: light.turn_off
+        entity_id: light.ashers_bedroom_light
+
+  - alias: Turn off Bathroom Fan 5min after light is turned off
+    trigger:
+      platform: state
+      entity_id: light.bathroom_light
+      to: "off"
+      for:
+        minutes: 5
+    action:
+      - service: switch.turn_off
+        entity_id: switch.bathroom_fan
+
+
+  - alias: google_say
+    trigger:
+      platform: mqtt
+      topic: living_room/switch/ac
+      #payload: 'on'
+    action:
+      - service: tts.google_say
+        data:
+          entity_id: media_player.samsungtv
+          message: 'May the Force be with you too.'
+      - service: tts.google_say
+        data:
+          entity_id: media_player.living_room
+          message: 'May the Force be with you too.'
+      - service: tts.google_say
+        data:
+          entity_id: media_player.television
+          message: 'May the Force be with you too.'
+
+
+
+##############################################################################################
+###################################  Alarm Panel to open Front Door   ########################
+##############################################################################################
+  - alias: alarm open front door
+    trigger:
+      - platform: state
+        entity_id: alarm_control_panel.front_door_lock
+        to: pending
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: 'Front Door Opened 1.'
+      - service: switch.turn_on
+        entity_id: switch.front_door_lock
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.front_door_lock
+          code: 1
+
+  - alias: Turn off front door after 60 second 
+    trigger:
+      platform: state
+      entity_id: switch.front_door_lock
+      to: "on"
+      for:
+        seconds: 60
+    action:
+      - service: switch.turn_off
+        entity_id: switch.front_door_lock
+
+##############################################################################################
+###################################  Alarm Panel to open Garage Door   ########################
+##############################################################################################
+  - alias: alarm open garage door
+    trigger:
+      - platform: state
+        entity_id: alarm_control_panel.garage_door_lock
+        to: pending
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: 'Garage Door Triggered.'
+      - service: switch.turn_on
+        entity_id: switch.garage_door_lock
+      - service: alarm_control_panel.alarm_disarm
+        data:
+          entity_id: alarm_control_panel.garage_door_lock
+          code: 1  
+
+
+
+
+  - alias: alarm garage door turn off after 1 second
+    trigger:
+      platform: state
+      entity_id: switch.garage_door_lock
+      to: "on"
+      for:
+        seconds: 1
+    action:
+      - service: switch.turn_off
+        entity_id: switch.garage_door_lock
+
+
+##############################################################################################
+##############################################################################################
+##############################################################################################
+
+
+
+
+
+  - alias: TV off at Bedtime
+    condition:
+      condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - sun
+    trigger:
+      platform: time
+      at: '19:10:00'
+    action:
+      - service: light.turn_off
+        entity_id: light.living_room_main_light
+      - delay:
+          # time for flash light off
+          seconds: 1
+      - service: light.turn_on
+        entity_id: light.living_room_main_light
+      - delay:
+          # time for flash light on
+          seconds: 1
+      - service: light.turn_off
+        entity_id: light.living_room_main_light
+      - delay:
+          # time for flash light on
+          seconds: 1
+      - service: light.turn_on
+        entity_id: light.living_room_main_light
+      - service: light.turn_off
+        entity_id:  light.ashers_bedroom_lighty
+      - delay:
+          # time for flash light on
+          minutes: 5
+      - service: media_player.turn_off
+        entity_id: media_player.samsung_tv_remote
+      - delay:
+          minutes: 5
+      - service: light.turn_off
+        entity_id: light.living_room_main_light
+
+
+  - alias: 'Send notification when sun rises'
+    trigger:
+      platform: sun
+      event: sunrise
+      offset: '+00:00:00'
+    action:
+      service: notify.PAKpushbullet
+      data:
+        message: 'The sun is up.'
+
+
+  - alias: 'Send notification when sun sets'
+    trigger:
+      platform: sun
+      event: sunset
+      offset: '-00:25:00'
+    action:
+      - service: light.turn_on
+        entity_id: light.living_room_main_light
+      - delay:
+          minutes: 25
+      - service: notify.PAKpushbullet
+        data:
+          message: 'The sun is down.'
+
+
+
+
+
+  - alias: ip address changes
+    trigger:
+      - platform: state
+        entity_id: sensor.external_ip
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: The new home IP address is https://{{ states('sensor.external_ip') }}:8123
+      - service: rest_command.ip_gae_request
+
+
+
+  - alias: inboundMQTT
+    trigger:
+      platform: mqtt
+      topic: living_room/switch/ac
+      #payload: 'on'
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: 'MQTT pushed.'
+      - service: media_player.play_media
+        data_template:
+          entity_id: media_player.television
+#          media_content_id: "http://192.168.0.105/cisco/stats/ipp/demo/analogclock.php?hghg=kk.png"
+          media_content_id: "https://192.168.0.15:8123/api/tts_proxy/0f9003b500ad9c3084966994e8b156744103780f_en_-_google.mp3"
+          media_content_type: 'audio'
+
+
+
+  - alias: Turn off Main Bathroom light after Xmin
+    condition:
+      condition: state
+      entity_id: switch.bathroom_fan
+      state: "off"    
+    trigger:
+      platform: state
+      entity_id: light.bathroom_light
+      to: "on"
+      for:
+        minutes: 5
+    action:
+      - service: light.turn_off
+        entity_id: light.bathroom_light
+
+

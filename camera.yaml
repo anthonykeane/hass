@@ -1,0 +1,21 @@
+  - platform: mjpeg
+    name: Living Room Camera
+    mjpeg_url: http://localhost:8081/
+
+  - platform: mjpeg
+    name: Front Door Camera
+    mjpeg_url: http://192.168.0.10:8081/
+
+  - platform: ffmpeg
+    input: rtsp://192.168.0.2:554/onvif2
+    name: CAM_1_RTSP
+
+  - platform: ffmpeg
+    input: rtsp://192.168.0.2:554/onvif1
+    name: CAM_2_RTSP
+
+#  - platform: onvif
+#    host: 192.168.0.2
+#    username: 9391610
+#    password: 123
+
