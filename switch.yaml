@@ -1,3 +1,24 @@
+  - platform: command_line
+    scan_interval: 300
+    switches:
+      living_room_motion1:
+        command_on: "/usr/bin/curl -s -X GET http://192.168.0.15:8085/0/detection/start  |  grep -c 'ACTIVE'"
+        command_off: "/usr/bin/curl -s -X GET http://192.168.0.15:8085/0/detection/pause  |  grep -c 'ACTIVE'"
+        command_state: "/usr/bin/curl -s -X GET http://192.168.0.15:8085/0/detection/status |  grep -c 'ACTIVE'"
+#        value_template: '{{ value == "1" }}'
+        friendly_name: Living Room Motion 1
+
+
+
+  - platform: command_line
+    switches:
+      mute_lenovo:
+        command_on: "amixer -q sset Master toggle"
+        command_off: "amixer -q sset Master toggle"
+        friendly_name: MuteLenovo
+
+
+
   - platform: mqtt
     name: "AC Down Stairs"
     state_topic: "stat/ac_down/POWER"

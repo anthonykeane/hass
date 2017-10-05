@@ -1,3 +1,26 @@
+ 
+  - platform: mqtt
+    name: "Tempature Show Strip Light"
+    state_topic: "stat/cap_sw/POWER2"
+    command_topic: "cmnd/cap_sw/POWER2"
+    brightness_state_topic: "stat/cap_sw/Scheme"
+    brightness_command_topic: "cmnd/cap_sw/Scheme"
+    rgb_state_topic: "stat/cap_sw/Color"
+    rgb_command_topic: "cmnd/cap_sw/Color"
+#    state_value_template: "{{ value_json.POWER2 }}"
+    brightness_value_template: "{{ value_json.Dimmer }}"
+    rgb_value_template: "{{ value_json.Color | join(',') }}"
+    rgb_command_mode: hex
+    brightness_scale: 9
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    optimistic: false
+
+
+
+
+
 
   - platform: mqtt
     name: "Saskia's Strip Light OTHER"

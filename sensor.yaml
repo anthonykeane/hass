@@ -1,4 +1,66 @@
-  - platform: dnsip
+  - platform: mqtt
+    state_topic: "tele/cap_sw/STATE"
+    name: "TMP Battery Level"
+    unit_of_measurement: "V"
+    value_template: '{{ value_json["Vcc"]}}'
+
+
+
+
+
+  - platform: statistics
+    name: pir_stat_count
+    entity_id: sensor.pir_counter
+
+
+
+  - platform: history_stats
+    name: Living Room Light **today**
+    entity_id: light.living_room_main_light
+    state: 'on'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+
+  - platform: history_stats
+    name: Living Room Light **Last 7** 
+    entity_id: light.living_room_main_light
+    state: 'on'
+    type: time
+    end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    duration:
+      days: 7
+
+  - platform: history_stats
+    name: Living Room Light **Last 30**
+    entity_id: light.living_room_main_light
+    state: 'on'
+    type: time
+    end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    duration:
+      days: 30
+
+  - platform: history_stats
+    name: Toilet Light **Last 30**
+    entity_id: light.bathroom_light
+    state: 'on'
+    type: time
+    end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    duration:
+      days: 30
+
+
+
+  - platform: command_line
+    name: poll_ip
+    scan_interval: 300
+    command:  "/usr/bin/curl -s -X GET https://pak-hass.appspot.com/memcache/ip"
+
+
+  - platform: otp
+    token: aksdkafkgfakgsfg
+
+#  - platform: dnsip
 
   - platform: api_streams
 
@@ -41,12 +103,3 @@
     resources:
       - type: processor_use
 
-  - platform: rest
-    resource: http://ip.jsontest.com
-    name: External IP
-    value_template: "{% if  not(is_state('value_json.ip', 'unknown')) %} {{ value_json.ip }} {%- else -%} {{sensor.external_ip}} {%- endif %}"
-
-  - platform: rest
-    resource: http://ip.jsontest.com
-    name: External IP org
-    value_template: '{{ value_json.ip }}'

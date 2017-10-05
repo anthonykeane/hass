@@ -1,7 +1,10 @@
 #LOGGER
   default: error
   logs:
-    homeassistant.components.rest_command: debug
-#    homeassistant.components.mqtt: debug
+    homeassistant.components.http: debug
+#    homeassistant.components.rest_command: debug
+    homeassistant.components.mqtt: debug
 #    homeassistant.components.camera: debug
-    homeassistant.components.automation: debug
+#    homeassistant.components.automation: debug
+#    homeassistant.components.camera: debug
+    homeassistant.components.camera.onvif: debug

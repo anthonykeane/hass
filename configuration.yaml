@@ -8,6 +8,8 @@ homeassistant:
   customize:
 #    switch.front_door_lock:
 #      hidden: true
+#    sensor.poll_ip:
+#      hidden: true
     switch.garage_door_lock:
       hidden: true
     automation.turn_off_front_door_after_60_second:
@@ -36,23 +38,41 @@ homeassistant:
     automation.start_ha:
        icon: mdi:power
 
-
 binary_sensor:
   - platform: workday
+    name: School Night
     country: AU
     province: NSW
     days_offset: 1
+  - platform: workday
+    name: Workday
+    country: AU
+    province: NSW
+  - platform: trend
+    sensors:
+      temperature_up:
+        friendly_name: 'Temp increasing'
+        entity_id: sensor.temp_upstairs
+        device_class: heat
+      temperature_down:
+        friendly_name: 'Temp decreasing'
+        entity_id: sensor.temp_upstairs
+        device_class: cold
+        invert: Yes
+  - platform: mqtt
+    state_topic: "pak/sensor/motion"
+    name: "Motion"
+    payload_on: '{"value":true}'
+    payload_off: '{"value":false}'
+    device_class: motion
+  - platform: mqtt
+    name: AK Present
+    state_topic: "pak/sensor/occupancy"
+    device_class: occupancy
+
 
 recorder:
-  purge_days: 14
-
-rest_command:
-  ip_gae_request:
-    url: 'https://pak-hass.appspot.com/memcache/ip'
-    payload: '{"ip":"{{states.sensor.external_ip.state}}"}'
-    method: put
-
-
+  purge_days: 31
 
 notify:
   platform: pushbullet
@@ -117,6 +137,8 @@ http:
   api_password: !include secret_password.yaml
   ssl_certificate: /home/pak/.homeassistant/fullchain.pem 
   ssl_key: /home/pak/.homeassistant/privkey.pem
+#  ssl_certificate: /home/pak/chained-anthonykeane.com.pem
+#  ssl_key: /home/pak/domain-anthonykeane.com.key
   trusted_networks:
     - 127.0.0.1
     - ::1
@@ -141,6 +163,8 @@ history:
 
 logbook:
   exclude:
+    entities:
+      - sensor.otp_sensor
     domains:
       - group
 

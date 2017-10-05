@@ -1,13 +1,223 @@
+
+  - alias: 'test'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.cpu_use'
+        above: '50'
+    trigger:
+      - platform: state
+        entity_id: sensor.cpu_use
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: CPU gone nuts
+
+
+  - alias: 1_send_red
+    trigger:
+      platform: homeassistant
+      event: start
+    action:
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led12"
+          payload: "010101"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led11"
+          payload: "010101"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led10"
+          payload: "010101"
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led9"
+          payload: "010101"
+
+
+
+
+
+
+####################################################################################################
+######################## Tempature Display Strip Light #############################################
+####################################################################################################
+
+
+  - alias: 'Send notification when Upstairs is Cold'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.temp_upstairs'
+        below: '20'
+    trigger:
+      - platform: state
+        entity_id: sensor.temp_upstairs
+    action:
+      - service: light.turn_on
+        entity_id: light.tempature_show_strip_light
+        data: {"entity_id": "light.tempature_show_strip_light", "rgb_color": [0, 0, 3]}
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led9"
+          payload: "010101"
+
+  - alias: 'Send notification when Upstairs is just right'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.temp_upstairs'
+        above: '20'
+        below: "25"
+    trigger:
+      - platform: state
+        entity_id: sensor.temp_upstairs
+    action:
+      - service: light.turn_on
+        entity_id: light.tempature_show_strip_light
+        data: {"entity_id": "light.tempature_show_strip_light", "rgb_color": [0, 3, 0]}
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led9"
+          payload: "010101"
+
+  - alias: 'Send notification when Upstairs is Hot'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.temp_upstairs'
+        above: '25'
+    trigger:
+      - platform: state
+        entity_id: sensor.temp_upstairs
+    action:
+      - service: light.turn_on
+        entity_id: light.tempature_show_strip_light
+        data: {"entity_id": "light.tempature_show_strip_light", "rgb_color": [3, 0, 0]}
+      - service: mqtt.publish
+        data:
+          topic: "cmnd/cap_sw/led9"
+          payload: "010101"
+####################################################################################################
+
+  - alias: 'Send notification when Downstairs is Cold'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.room_temp'
+        below: '20'
+    trigger:
+      - platform: state
+        entity_id: sensor.room_temp
+    action:
+      - service: light.turn_on
+        entity_id: light.tempature_show_strip_light
+        data: {"entity_id": "light.tempature_show_strip_light", "rgb_color": [0, 0, 5]}
+
+  - alias: 'Send notification when Downsairs is Hot'
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.room_temp'
+        above: '25'
+    trigger:
+      - platform: state
+        entity_id: sensor.room_temp
+    action:
+      - service: light.turn_on
+        entity_id: light.tempature_show_strip_light
+        data: {"entity_id": "light.tempature_show_strip_light", "rgb_color": [5, 0, 0]}
+
+
+
+
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+
+
+
+
+
+
+
+  - alias: ip address changes
+    trigger:
+      - platform: state
+        entity_id: sensor.ip_poll
+    action:
+      - service: notify.PAKpushbullet
+        data:
+          message: The new home IP address is https://{{ states('sensor.ip_poll') }}:8123
+      - service: rest_command.ip_gae_request
+
+
+
+
+
+
+  - alias: ALL OFF
+    trigger:
+      platform: time
+      at: '00:00:00'
+    action:
+      - service: switch.turn_off
+        entity_id: group.all_switches
+      - service: lights.turn_off
+        entity_id: group.all_lights
+
+# user to find the IP address of all sonoffs
   - alias: IPAddress1
     trigger:
       platform: homeassistant
       event: start
     action:
-      - delay:
-          seconds: 10
       - service: mqtt.publish
         data:
           topic: "cmnd/sonoffs/IPAddress1"
+
+
+####################################################################################################
+########################          Motion               #############################################
+####################################################################################################
+
+  - alias: Set Motion Detection Off for Day
+    trigger:
+      platform: time
+      at: '6:00:00'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.living_room_motion1
+
+
+  - alias: Set Motion Detection On for Workday
+    condition:
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: 'on'
+    trigger:
+      platform: time
+      at: '9:00:00'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.living_room_motion1
+
+
+  - alias: Set Motion Detection Off for Evening
+    trigger:
+      platform: time
+      at: '15:00:00'
+    action:
+      - service: switch.turn_off
+        entity_id: switch.living_room_motion1
+
+  - alias: Set Motion Detection On for Night
+    trigger:
+      platform: time
+      at: '21:00:00'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.living_room_motion1
+
+####################################################################################################
+####################################################################################################
 
 
   - alias: 'Close blind at dusk'
@@ -50,6 +260,8 @@
         data:
           topic: "cmnd/sonoffs/POWER2"
 
+####################################################################################################
+####################################################################################################
 
   - alias: 'Anthony Away'
     condition:
@@ -98,6 +310,8 @@
         data:
           message: 'home.'
 
+####################################################################################################
+####################################################################################################
 
   - alias: Turn off Toilet light after 5min
     trigger:
@@ -133,6 +347,8 @@
       - service: switch.turn_off
         entity_id: switch.bathroom_fan
 
+####################################################################################################
+####################################################################################################
 
   - alias: google_say
     trigger:
@@ -156,7 +372,6 @@
 
 
 ##############################################################################################
-###################################  Alarm Panel to open Front Door   ########################
 ##############################################################################################
   - alias: alarm open front door
     trigger:
@@ -172,7 +387,7 @@
       - service: alarm_control_panel.alarm_disarm
         data:
           entity_id: alarm_control_panel.front_door_lock
-          code: 1
+          code: 5
 
   - alias: Turn off front door after 60 second 
     trigger:
@@ -186,7 +401,6 @@
         entity_id: switch.front_door_lock
 
 ##############################################################################################
-###################################  Alarm Panel to open Garage Door   ########################
 ##############################################################################################
   - alias: alarm open garage door
     trigger:
@@ -202,7 +416,7 @@
       - service: alarm_control_panel.alarm_disarm
         data:
           entity_id: alarm_control_panel.garage_door_lock
-          code: 1  
+          code: 5  
 
 
 
@@ -297,20 +511,6 @@
 
 
 
-
-
-  - alias: ip address changes
-    trigger:
-      - platform: state
-        entity_id: sensor.external_ip
-    action:
-      - service: notify.PAKpushbullet
-        data:
-          message: The new home IP address is https://{{ states('sensor.external_ip') }}:8123
-      - service: rest_command.ip_gae_request
-
-
-
   - alias: inboundMQTT
     trigger:
       platform: mqtt
@@ -323,9 +523,9 @@
       - service: media_player.play_media
         data_template:
           entity_id: media_player.television
-#          media_content_id: "http://192.168.0.105/cisco/stats/ipp/demo/analogclock.php?hghg=kk.png"
-          media_content_id: "https://192.168.0.15:8123/api/tts_proxy/0f9003b500ad9c3084966994e8b156744103780f_en_-_google.mp3"
-          media_content_type: 'audio'
+          media_content_id: "http://192.168.0.105/cisco/stats/ipp/demo/analogclock.php?hghg=kk.png"
+#          media_content_id: "https://192.168.0.15:8123/api/tts_proxy/0f9003b500ad9c3084966994e8b156744103780f_en_-_google.mp3"
+#          media_content_type: 'audio'
 
 
 

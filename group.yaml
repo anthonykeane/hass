@@ -1,6 +1,20 @@
-  First Floor Lights:
-    - group.living_room_lights
+  Stuff:
+    - media_player.samsung_tv_remote
+    - media_player.television
+
+
+  First Floor:
+    - media_player.samsung_tv_remote
+    - media_player.television
     - light.bathroom_light
+    - light.living_room_main_light
+    - light.living_room_other_light
+    - light.living_room_side_lights
+    - switch.ac_down_stairs
+    - switch.bathroom_fan
+    - cover.garden_blinds
+
+
 
   Living Room Lights:
     - light.living_room_main_light
@@ -27,6 +41,7 @@
     - sun.sun
 
   System:
+    - sensor.pir_stat_count
     - sensor.pir_counter
     - sensor.room_temp
     - sensor.temp_upstairs
@@ -93,16 +108,23 @@
     entities:
       - group.saskias_room
 
+
+
+
   First_Floor_view:
     view: yes
     icon: mdi:sofa
     entities:
-      - group.first_floor_lights
+      - media_player.samsung_tv_remote
+      - media_player.television
+      - light.bathroom_light
+      - light.living_room_main_light
+      - light.living_room_other_light
+      - light.living_room_side_lights
+      - switch.ac_down_stairs
+      - switch.bathroom_fan
       - group.living_room_lights
-      - group.first_floor_media
-      - group.first_floor_switches
       - cover.garden_blinds
-
 
   Top_Floor_view:
     view: yes
@@ -122,15 +144,29 @@
     entities:
       - group.system
 
+  Motion:
+    name: Motion
+    entities:
+      switch.living_room_motion1
+
+
   Security:
     name: Security
     icon: mdi:security-home
     view: yes
     entities:
+      - group.motion
       - camera.living_room_camera
       - camera.front_door_camera
       - camera.cam_2_rtsp
       - camera.cam_1_rtsp
+
+  It All:
+    name: It All
+    entities:
+      - group.all_lights
+      - group.all_switches
+
 
   Scary:
     name: Protected
@@ -139,5 +175,6 @@
     entities:
       - group.locks
       - switch.reboot_internet
-
-
+      - group.it_all
+      - group.all_lights
+      - group.all_switches
